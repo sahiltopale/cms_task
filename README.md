@@ -6,6 +6,8 @@ The application allows authenticated users to create, manage, publish, and maint
 
 ---
 
+LIVE_URL - https://cms-task-beryl.vercel.app/
+
 # Table of Contents
 
 - [Project Overview](#project-overview)
