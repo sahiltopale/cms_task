@@ -1,7 +1,12 @@
 import { DataTypes, Model } from "sequelize";
 import sequelize from "../config/database";
 
-class Post extends Model {}
+class Post extends Model {
+  declare id: string;
+  declare slug: string;
+  declare status: "draft" | "published";
+  declare authorId: string;
+}
 
 Post.init(
   {
@@ -29,7 +34,12 @@ Post.init(
   },
   {
     sequelize,
+
     modelName: "Post",
+
+    tableName: "Posts",
+
+    timestamps: true,
   },
 );
 

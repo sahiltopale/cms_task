@@ -747,12 +747,14 @@ http://localhost:5173
 
 # Seeding Database
 
-To insert sample posts:
+## Seed Demo Data
 
-```
+To populate the database with sample users, posts and versions:
+
+```bash
+cd backend
+
 npm run seed
-
-```
 
 ---
 
@@ -785,6 +787,7 @@ Sequelize provides:
 Traditional CMS:
 
 ```
+
 Update existing row
 
 Old content lost
@@ -794,6 +797,7 @@ Old content lost
 Implemented approach:
 
 ```
+
 Create new version
 
 Old content preserved
@@ -833,6 +837,7 @@ Automatically save drafts while editing.
 Example:
 
 ```
+
 Admin
 
 Editor
@@ -889,10 +894,13 @@ Developed as part of a CMS Full Stack Development Assignment.
 Technology Stack:
 
 ```
+
 React + TypeScript
 Node.js + Express
 PostgreSQL
 Sequelize
 JWT Authentication
+
+```
 
 ```

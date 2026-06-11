@@ -1,7 +1,12 @@
 import { DataTypes, Model } from "sequelize";
 import sequelize from "../config/database";
 
-class User extends Model {}
+class User extends Model {
+  declare id: string;
+  declare name: string;
+  declare email: string;
+  declare passwordHash: string;
+}
 
 User.init(
   {
@@ -29,7 +34,12 @@ User.init(
   },
   {
     sequelize,
+
     modelName: "User",
+
+    tableName: "Users",
+
+    timestamps: true,
   },
 );
 
