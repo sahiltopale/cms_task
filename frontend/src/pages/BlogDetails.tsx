@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import api from "../api/axios";
-import "../styles/blogDetails.css";
+import "../styles/blogdetails.css";
 
 function BlogDetails() {
   const { slug } = useParams();
