@@ -283,75 +283,52 @@ Consistency
 Every client receives the same comparison result.
 
 5. Deployment Decision
-   Deployment Architecture
+The CMS application uses a separate frontend and backend deployment strategy:
 
-The application consists of three major parts:
+Frontend: Vercel
+Backend: Render
+Database: PostgreSQL
+Reasons for Deployment Choices
 
-Frontend
-React + TypeScript
+Vercel was selected for the React + Vite frontend because it provides fast static hosting, automatic GitHub deployments, HTTPS support, and global CDN distribution.
 
-        |
+Render was selected for the Node.js + Express backend because it supports long-running server applications, environment variable management, and automatic deployments from GitHub.
 
-Backend
-Node.js + Express
+This separation allows independent deployment, better scalability, and easier maintenance.
 
-        |
+Deployment Architecture
+Architecture Flow
 
-Database
-PostgreSQL
-Deployment Options
+User Browser
+↓
+Frontend (React + Vite on Vercel)
+↓ API Requests (Axios)
+Backend (Node.js + Express on Render)
+↓ Sequelize ORM
+PostgreSQL Database
+
+Production URLs
 
 Frontend:
-
-Recommended:
-
-Vercel
-Netlify
+https://cms-task-beryl.vercel.app
 
 Backend:
+https://cms-task-bsz7.onrender.com
 
-Recommended:
+Challenges Faced
+TypeScript Build Errors on Render due to missing type definitions.
+Resolved by updating package dependencies.
+CORS Errors between Vercel and Render.
+Resolved by configuring Express CORS middleware.
+Hardcoded Localhost API URLs in production.
+Resolved by updating Axios to use the deployed Render backend URL.
 
-Render
-Railway
+Final Outcome
 
-Database:
-
-Recommended:
-
-Neon PostgreSQL
-Supabase PostgreSQL
-Trickiest Part During Deployment
-
-The most challenging part was configuring communication between frontend, backend, and database.
-
-Main issues:
-
-1. Environment Variables
-
-Local:
-
-localhost:5000
-
-Production:
-
-https://backend-domain.com
-
-The frontend API URL needed to be configurable.
-
-2. CORS Configuration
-
-The backend needed to allow requests from the deployed frontend domain.
-
-Example:
-
-cors({
-origin:"frontend-url"
-}) 3. Database Connection
-
-The PostgreSQL connection string had to be configured securely using environment variables.
+The deployed application successfully supports user authentication, content creation, version management, version comparison, and public blog viewing through a fully deployed production environment.
 
 6. What I Would Improve With More Time
+   
 1. Better Rich Text Rendering
 
 Currently the system focuses on storing and comparing content.
