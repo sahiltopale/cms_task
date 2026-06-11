@@ -17,9 +17,13 @@ function Dashboard() {
   const fetchPosts = async () => {
     try {
       const token = localStorage.getItem("token");
+
       const res = await api.get("/posts/my-posts", {
-        headers: { Authorization: `Bearer ${token}` },
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       });
+
       setPosts(res.data);
     } catch (error) {
       console.error(error);
@@ -28,53 +32,69 @@ function Dashboard() {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
+
     navigate("/");
   };
 
   const publishPost = async (postId: string) => {
     try {
       const token = localStorage.getItem("token");
+
       await api.patch(
         `/posts/${postId}/publish`,
         {},
-        { headers: { Authorization: `Bearer ${token}` } },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
       );
+
       alert("Post Published");
+
       fetchPosts();
     } catch (error) {
       console.error(error);
-      alert("Failed to publish post");
     }
   };
 
-  // ✅ ADDED: Unpublish function
   const unpublishPost = async (postId: string) => {
     try {
       const token = localStorage.getItem("token");
+
       await api.patch(
         `/posts/${postId}/unpublish`,
         {},
-        { headers: { Authorization: `Bearer ${token}` } },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
       );
+
       alert("Post Unpublished");
+
       fetchPosts();
     } catch (error) {
       console.error(error);
-      alert("Failed to unpublish post");
     }
   };
 
   const deletePost = async (postId: string) => {
     try {
       const token = localStorage.getItem("token");
+
       await api.delete(`/posts/${postId}`, {
-        headers: { Authorization: `Bearer ${token}` },
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       });
+
       alert("Post Deleted");
+
       fetchPosts();
     } catch (error) {
       console.error(error);
-      alert("Failed to delete post");
     }
   };
 
@@ -92,9 +112,11 @@ function Dashboard() {
   return (
     <div className="dashboard-container">
       {/* HEADER */}
+
       <div className="dashboard-header">
         <div>
           <h1 className="dashboard-title">CMS Dashboard</h1>
+
           <p className="dashboard-subtitle">
             Manage, edit and publish your content
           </p>
@@ -107,13 +129,19 @@ function Dashboard() {
           >
             Create Post
           </button>
+
+          <button className="btn btn-blog" onClick={() => navigate("/blog")}>
+            View Blog
+          </button>
+
           <button className="btn btn-outline" onClick={handleLogout}>
             Logout
           </button>
         </div>
       </div>
 
-      {/* SEARCH + FILTER BAR */}
+      {/* SEARCH FILTER */}
+
       <div className="dashboard-controls">
         <input
           className="search-bar"
@@ -135,7 +163,6 @@ function Dashboard() {
         </div>
       </div>
 
-      {/* POSTS */}
       {filteredPosts.length === 0 ? (
         <p className="dashboard-empty">No posts found.</p>
       ) : (
@@ -144,6 +171,7 @@ function Dashboard() {
             <div key={post.id} className="post-card">
               <div className="post-top">
                 <h3 className="post-title">{post.slug}</h3>
+
                 <span
                   className={`post-status status-${post.status?.toLowerCase()}`}
                 >
@@ -160,13 +188,21 @@ function Dashboard() {
                   Versions
                 </button>
 
-                {/* ✅ TOGGLE BUTTON */}
                 {post.status?.toLowerCase() === "published" ? (
-                  <button onClick={() => unpublishPost(post.id)}>
-                    Unpublish
+                  <button
+                    className="live-btn"
+                    onClick={() => navigate(`/blog/${post.slug}`)}
+                  >
+                    View Live
                   </button>
                 ) : (
                   <button onClick={() => publishPost(post.id)}>Publish</button>
+                )}
+
+                {post.status?.toLowerCase() === "published" && (
+                  <button onClick={() => unpublishPost(post.id)}>
+                    Unpublish
+                  </button>
                 )}
 
                 <button className="danger" onClick={() => deletePost(post.id)}>
@@ -177,6 +213,16 @@ function Dashboard() {
           ))}
         </div>
       )}
+
+      <footer className="dashboard-footer">
+        <div className="footer-content">
+          <p>
+            © {new Date().getFullYear()} CMS Dashboard. All rights reserved.
+          </p>
+
+          <p>Built with React, Node.js & PostgreSQL</p>
+        </div>
+      </footer>
     </div>
   );
 }

@@ -7,6 +7,9 @@ import Dashboard from "./pages/Dashboard";
 import CreatePost from "./pages/CreatePost";
 import EditPost from "./pages/EditPost";
 import Versions from "./pages/Versions";
+import VersionDiffPage from "./pages/VersionDiffPage";
+import Blog from "./pages/Blog";
+import BlogDetails from "./pages/BlogDetails";
 
 import ProtectedRoute from "./components/ProtectedRoute";
 
@@ -52,6 +55,33 @@ function App() {
           element={
             <ProtectedRoute>
               <Versions />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/compare/:version1Id/:version2Id"
+          element={
+            <ProtectedRoute>
+              <VersionDiffPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/blog"
+          element={
+            <ProtectedRoute>
+              <Blog />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/blog/:slug"
+          element={
+            <ProtectedRoute>
+              <BlogDetails />
             </ProtectedRoute>
           }
         />
