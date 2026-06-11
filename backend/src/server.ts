@@ -5,13 +5,20 @@ import dotenv from "dotenv";
 dotenv.config();
 
 import sequelize from "./config/database";
+
 import authRoutes from "./routes/authRoutes";
 import testRoutes from "./routes/testRoutes";
 import postRoutes from "./routes/postRoutes";
 
 const app = express();
 
-app.use(cors());
+app.use(
+  cors({
+    origin: ["http://localhost:5173", process.env.FRONTEND_URL || ""],
+    credentials: true,
+  }),
+);
+
 app.use(express.json());
 
 app.use("/auth", authRoutes);
@@ -25,9 +32,9 @@ app.get("/", (req, res) => {
 const PORT = process.env.PORT || 5000;
 
 sequelize
-  .authenticate()
+  .sync()
   .then(() => {
-    console.log("Database Connected");
+    console.log("Database Connected & Tables Synced");
 
     app.listen(PORT, () => {
       console.log(`Server running on port ${PORT}`);
