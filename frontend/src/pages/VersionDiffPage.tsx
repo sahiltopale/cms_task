@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import axios from "axios";
+import api from "../api/axios";
 import "../styles/VersionDiffPage.css";
 
 interface DiffItem {
@@ -8,7 +8,7 @@ interface DiffItem {
   1: string;
 }
 
-const VersionDiffPage = () => {
+function VersionDiffPage() {
   const { version1Id, version2Id } = useParams();
 
   const [diffs, setDiffs] = useState<DiffItem[]>([]);
@@ -24,20 +24,17 @@ const VersionDiffPage = () => {
     try {
       const token = localStorage.getItem("token");
 
-      const res = await axios.get(
-        `http://localhost:5000/posts/compare/${version1Id}/${version2Id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+      const res = await api.get(`/posts/compare/${version1Id}/${version2Id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
         },
-      );
+      });
 
-      setDiffs(res.data.diffs);
-      setOldContent(res.data.oldContent);
-      setNewContent(res.data.newContent);
+      setDiffs(res.data.diffs || []);
+      setOldContent(res.data.oldContent || "");
+      setNewContent(res.data.newContent || "");
     } catch (error) {
-      console.error(error);
+      console.error("Version compare error:", error);
     } finally {
       setLoading(false);
     }
@@ -55,6 +52,7 @@ const VersionDiffPage = () => {
     <div className="diff-page">
       <div className="diff-wrapper">
         <h1 className="diff-title">Version Comparison</h1>
+
         <p className="diff-subtitle">
           Compare changes between two saved versions
         </p>
@@ -74,38 +72,42 @@ const VersionDiffPage = () => {
         <div className="changes-card">
           <h3>Changes</h3>
 
-          {diffs.map((diff: any, index) => {
-            const operation = diff[0];
-            const text = diff[1];
+          {diffs.length === 0 ? (
+            <p>No changes found.</p>
+          ) : (
+            diffs.map((diff, index) => {
+              const operation = diff[0];
+              const text = diff[1];
 
-            if (!text.trim()) return null;
+              if (!text.trim()) return null;
 
-            if (operation === 1) {
+              if (operation === 1) {
+                return (
+                  <div key={index} className="diff-added">
+                    + {text}
+                  </div>
+                );
+              }
+
+              if (operation === -1) {
+                return (
+                  <div key={index} className="diff-removed">
+                    - {text}
+                  </div>
+                );
+              }
+
               return (
-                <span key={index} className="diff-added">
-                  + {text}
-                </span>
+                <div key={index} className="diff-unchanged">
+                  {text}
+                </div>
               );
-            }
-
-            if (operation === -1) {
-              return (
-                <span key={index} className="diff-removed">
-                  - {text}
-                </span>
-              );
-            }
-
-            return (
-              <span key={index} className="diff-unchanged">
-                {text}
-              </span>
-            );
-          })}
+            })
+          )}
         </div>
       </div>
     </div>
   );
-};
+}
 
 export default VersionDiffPage;
